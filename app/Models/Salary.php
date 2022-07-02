@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Salary extends Model
+{
+    use HasFactory;
+     //Table Name
+     protected $table = 'salary';
+     //Primary Key
+     public $primaryKey = 'id_user';
+     // //Timestamps
+     public $timestamps = true;
+
+     public function employees(){
+        return $this->belongsTo(Employee::class,'nik');
+    }
+}
