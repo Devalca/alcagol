@@ -33,7 +33,8 @@ class SalaryGroupController extends Controller
      */
     public function create()
     {
-        return view('salary_groups.create');
+        $salary_group = SalaryGroup::all();
+        return view('salary_groups.create')->with('salary_group', $salary_group);
     }
 
     /**
@@ -54,9 +55,38 @@ class SalaryGroupController extends Controller
 
             // Create Data
             $salaryGroup = new SalaryGroup;
-            $salaryGroup->nama_golongan = $request->input('nama_golongan');
             // $salaryGroup->persentase_kenaikan = $request->input('persentase_kenaikan');
-            $salaryGroup->gaji_pokok = $request->input('gaji_pokok');
+            $nama = SalaryGroup::where('nama_golongan', $request->input('nama_golongan'))->first();
+            if($nama) {
+                return redirect('/salary_groups')->with('success', 'Golongan Tidak Boleh Sama');
+            } else {
+                if($request->input('nama_golongan') == "A") {
+                    if($request->input('gaji_pokok') < 3000000) {
+                        return redirect('/salary_groups')->with('success', 'Golongan A Gaji Pokok Tidak Boleh Kurang Dari 3000000');
+                    } else {
+                        $salaryGroup->gaji_pokok = $request->input('gaji_pokok');
+                        $salaryGroup->nama_golongan = $request->input('nama_golongan');
+                    }
+                } elseif($request->input('nama_golongan') == "B") {
+                    if($request->input('gaji_pokok') < 2000000 || $request->input('gaji_pokok') > 3000000) {
+                        return redirect('/salary_groups')->with('success', 'Golongan B Gaji Pokok Tidak Boleh Kurang Dari 2000000 Dan Tidak Boleh Lebih Dari 3000000');
+                    } else {
+                        $salaryGroup->gaji_pokok = $request->input('gaji_pokok');
+                        $salaryGroup->nama_golongan = $request->input('nama_golongan');
+                    }
+                } elseif($request->input('nama_golongan') == "C") {
+                    if($request->input('gaji_pokok') > 2000000) {
+                        return redirect('/salary_groups')->with('success', 'Golongan C Gaji Pokok Tidak Boleh Lebih Dari 2000000');
+                    } else {
+                        $salaryGroup->gaji_pokok = $request->input('gaji_pokok');
+                        $salaryGroup->nama_golongan = $request->input('nama_golongan');
+                    }
+                }
+
+                $salaryGroup->save();
+                return redirect('/salary_groups')->with('success', 'Data Berhasil Ditambahkan');
+            }
+            
 
             // $gaji_pokok_min = SalaryGroup::latest()->pluck('gaji_pokok')->first();
             // $gaji_pokok_const = SalaryGroup::oldest()->pluck('gaji_pokok')->first();
@@ -83,9 +113,6 @@ class SalaryGroupController extends Controller
         //     $salaryGroup->basic_salary = $request->input('basic_salary');
         // }
         // //	End Third Digit Case
-    
-        $salaryGroup->save();
-        return redirect('/salary_groups')->with('success', 'Data Berhasil Ditambahkan');
     
     }
 
@@ -130,7 +157,7 @@ class SalaryGroupController extends Controller
 
         // Create Data
         $salaryGroup = SalaryGroup::find($id_golongan);
-        $salaryGroup->nama_golongan = $request->input('nama_golongan');
+        // $salaryGroup->nama_golongan = $request->input('nama_golongan');
         // $salaryGroup->persentase_kenaikan = $request->input('persentase_kenaikan');
         $salaryGroup->gaji_pokok = $request->input('gaji_pokok');
 

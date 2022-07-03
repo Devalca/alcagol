@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><b>Matrix Alternatif - Kriteria</b></h1>
-        
-    <hr>
-    <a href="/score/create" class="btn btn-success" 
-    style="height:40px;font-size:16px;margin:5px 0px 5px 0px">+ Tambah Data</a>
+<h1><b>Data Penilaian</b></h1>
+@if(count($salary_groups) < 3)
+<p style="font-size:24px">Silahkan Input Golongan Terlebih Dahulu</p>
+@else
+<hr>
+<a href="/score/create" class="btn btn-success" 
+style="height:40px;font-size:16px;margin:5px 0px 5px 0px">+ Tambah Data</a>
+@endif
 
 @if(count($score) > 0)
     <table class="table table-bordered table-striped table-hover" style="margin:10px 0px;font-size:16px">
@@ -168,6 +171,7 @@
             <tr style="text-align:center">
                 <th class="col-2" scope="col" style="vertical-align:middle">Alternatif / Kriteria</th>
                 <th class="col-1" scope="col" style="vertical-align:middle">V</th>
+                <th class="col-1" scope="col" style="vertical-align:middle">Action</th>
             </tr>
         </thead>
 
@@ -184,7 +188,14 @@
                     @endphp
                 @endfor
             <td style="vertical-align:middle;text-align:center">{{number_format((float)$v[$a][0], 2, '.', '')}}</td>
-
+            <th style="vertical-align:middle;width:10px;text-align:center">
+                    {!!Form::open(['action' => ['ScoreController@kon', $scores->nik], 'method' => 'PUT'])!!}
+                        {{Form::hidden('_method', 'PUT')}}
+                        {{Form::hidden('golongan', number_format((float)$v[$a][0], 2, '.', ''), ['class' => 'form-control', 'placeholder' => 'Masukkan usia pensiun', 'type' => 'hidden'])}}
+                        {{Form::submit('Update', ['class' => 'btn btn-success', 
+                        'style' => "height:28px;width:80px;padding:1px;horizontal-align:middle"])}}
+                    {!!Form::close()!!}
+                </th>
         </tr>
         @endfor
         </tbody>
@@ -198,7 +209,7 @@
     <p>{{ $score->links() }}</p>
 
 @else
-    <br><br>
+    <hr>
     <p style="font-size:24px">Belum Ada Data</p>
 @endif
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Salary;
+use App\Models\Analyst;
 use App\Models\Employee;
 use App\Models\SalaryGroup;
 use DB;
@@ -19,7 +20,8 @@ class SalaryController extends Controller
     public function index()
     {
         $salary = Salary::orderBy('id_user', 'asc')->paginate(120);
-        return view('salary.index')->with('salary', $salary);
+        $employees = Employee::all();
+        return view('salary.index',compact('employees'))->with('salary', $salary);
     } 
 
     /**
@@ -31,7 +33,8 @@ class SalaryController extends Controller
     {
         $salary = Salary::orderBy('id_user', 'asc')->paginate(120);
         $employees = Employee::all();
-        return view('salary.create', compact('employees'))->with('salary', $salary);
+        $analysts = Analyst::all();
+        return view('salary.create', compact('employees', 'analysts'))->with('salary', $salary);
     }
 
     /**
@@ -54,7 +57,7 @@ class SalaryController extends Controller
         $salary = new Salary;
         $nullAbsen = 0;
         $nullCuti = 0;
-        $nama = Employee::where(`nik`)->first();
+        $nama = Employee::where('nik', $request->input('nama_lengkap'))->first();
         if($request->input('absen') == null) {
             $salary->absen = 0;
             $nullAbsen = 0;
@@ -73,7 +76,7 @@ class SalaryController extends Controller
         if ($nama->exists()) {
             $salary->nama_lengkap = $nama->nama_lengkap;
             $salary->jabatan = $nama->jabatan;
-            $gajiPokok = SalaryGroup::where(`id_golongan`)->first();
+            $gajiPokok = SalaryGroup::where('id_golongan', $nama->id_golongan)->first();
             $salary->gaji_pokok = $gajiPokok->gaji_pokok;
         }
         $salary->lembur = $request->input('lembur');

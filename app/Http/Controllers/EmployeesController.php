@@ -120,7 +120,7 @@ class EmployeesController extends Controller
         // $employee->golongan_terakhir = $request->input('golongan_terakhir');
         $employee->usia_pensiun = $request->input('usia_pensiun');
 
-        // $employee->id_golongan = $request->input('id_golongan');
+        $employee->id_golongan = "";
 
         // $employee->lama_bekerja = $request->input('lama_bekerja');
             $tgl_masuk_kerja = $employee->tgl_masuk_kerja;

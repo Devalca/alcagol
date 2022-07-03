@@ -1,11 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><b>Gaji</b></h1>
-        
+    <h1><b>Data Gaji</b></h1> 
     <hr>
+    @if(count($employees) > 0)
     <a href="/salary/create" class="btn btn-success" 
     style="height:40px;font-size:16px;margin:5px 0px 5px 0px">+ Tambah Data</a>
+    @else
+        <h1><b>Data Karyawan Kosong</b></h1>
+        <br>
+    @endif
 
 @if(count($salary) > 0)
     <table class="table table-bordered table-striped table-hover" style="margin:10px 0px;font-size:16px">

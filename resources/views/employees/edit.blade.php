@@ -127,20 +127,24 @@
             {{Form::text('golongan_terakhir', $employee->golongan_terakhir, ['class' => 'form-control', 'placeholder' => 'Masukkan golongan terakhir'])}}
         </div> --}}
 
-       {{-- <label>Golongan Terakhir</label><br>
+        @if($employee->id_golongan)
+       <label>Golongan Terakhir</label><br>
             <select class="form-control" name="id_golongan">
                 <option selected="true" disabled="true">Pilih Golongan</option>
                     @foreach ($salaryGroup as $golongan)
                         <option value="{{ $golongan->id_golongan }}" 
-                            @if ($golongan->id_golongan === $employee->salary_groups->id_golongan)
+                            @if ($golongan->id_golongan === $employee->id_golongan)
                                 selected
                             @endif >
                             {{ $golongan->nama_golongan }}
                         </option>
                     @endforeach
             </select>
-        <br> --}}
-        <label>Golongan Terakhir</label><br>
+        <br>
+        @else
+        <p></p>
+        @endif
+        {{--<label>Golongan Terakhir</label><br>
             <select class="form-control" name="id_golongan">
                 <option selected="true" disabled="true">Masukan Golongan Terakhir</option>
                     @foreach ($salaryGroup as $gol)
@@ -149,7 +153,7 @@
                         </option>
                     @endforeach    
             </select>
-        <br>
+        <br>--}}
 
         <div class="form-group">
             {{Form::label('usia_pensiun', 'Usia Pensiun ( tahun )')}}

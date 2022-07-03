@@ -2,7 +2,7 @@
 
 @section('content')
     <h1><b>TAMBAH DATA</b></h1>
-    @if(count($employees) > 0)
+    @if(count($analysts) > 0)
     <hr>
     {!! Form::open(['action' => 'SalaryController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <label>Nama Lengkap</label><br>
@@ -11,10 +11,16 @@
                     @foreach ($employees as $enik)
                         @if ($salary->contains('id_user', $enik->nik))
                             <option selected="true" disabled="true">-</option>
-                        @else 
+                        @else
+                            @if ($enik->id_golongan)
                             <option value="{{ $enik->nik }}"> 
                                 {{ $enik->nama_lengkap }} 
                             </option>
+                            @else
+                            <option disabled="true"> 
+                                {{ $enik->nama_lengkap }}: Gaji Pokok Belum di Update 
+                            </option>
+                            @endif
                         @endif
                     @endforeach    
             </select>
@@ -48,7 +54,7 @@
         </div>
         <br><br><br>
     @else
-        <h1><b>Data Karyawan Kosong</b></h1>
+        <h1><b>Data Analyst Kosong</b></h1>
         <br>
     @endif
     

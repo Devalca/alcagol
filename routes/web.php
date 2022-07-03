@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GolonganController;
+use App\Http\Controllers\SalaryGroupController;
+use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\ScoreController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,4 +60,6 @@ Route::get('/slip_gaji', [App\Http\Controllers\PagesController::class, 'slip_gaj
 Route::resource('salary_groups', 'SalaryGroupController');
 Route::resource('salary', 'SalaryController');
 Route::resource('analyst', 'AnalystController');
+
+Route::put('/score/{nik}', [ScoreController::class, 'kon']);
 Route::resource('score', 'ScoreController');

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Score;
 use App\Models\Employee;
+use App\Models\SalaryGroup;
 use App\Models\Analyst;
 use DB;
 
@@ -19,8 +20,9 @@ class ScoreController extends Controller
     public function index()
     {
         $score = Score::orderBy('nik', 'asc')->paginate(120);
+        $salary_groups = SalaryGroup::orderBy('id_golongan', 'asc')->paginate(120);
         $analyst = Analyst::all();
-        return view('score.index', compact('analyst'))->with('score', $score);
+        return view('score.index', compact('analyst', 'salary_groups'))->with('score', $score);
     } 
 
     /**
@@ -57,11 +59,9 @@ class ScoreController extends Controller
 
         $score = new Score;
         $cekScore = Score::find($request->input('nama_lengkap'));
-        $nama = Employee::where(`nik`)->first();
+        $nama = Employee::where('nik', $request->input('nama_lengkap'))->first();
         $score->nik = $request->input('nama_lengkap');
-        if ($nama->exists()) {
-            $score->nama_lengkap = $nama->nama_lengkap;
-        }
+        $score->nama_lengkap = $nama->nama_lengkap;
         if($request->input('k1') < 10
             || $request->input('k2') < 10
             || $request->input('k3') < 10
@@ -164,10 +164,29 @@ class ScoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($nik, $gol)
+    public function destroy($nik)
     {
         $score = Score::find($nik);
-        // $score->delete();
+        $score->delete();
         return redirect('/score')->with('success', 'Data Berhasil Dihapus');
+    }
+
+    public function kon(Request $request, $nik)
+    {
+        // $score = Score::find($gol);
+
+        $golongan = "";
+        if($request->input('golongan') >= 0.8) {
+            $golongan = "C";
+        }
+        $employee = Employee::find($nik);
+        $nama = SalaryGroup::where('nama_golongan', $golongan)->first();
+        // $kk = SalaryGroup::find($golongan);
+        // $b = $salaryGroup->id_golongan;
+
+        $employee->id_golongan = $nama->id_golongan;
+        $employee->save();
+
+        return redirect('/score')->with('success', 'Update Golongan Karyawan Berhasil');
     }
 }
